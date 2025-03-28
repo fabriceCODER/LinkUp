@@ -24,5 +24,10 @@ public class User {
 
     @Enumerated(EnumType.STRING)
     @Column(nullable = false)
-    private Role role; // Now references the separate Role enum
+    private Role role;
+
+    @Column(columnDefinition = "TEXT")
+    private String skills;
+
+    private String resumeUrl;
 }

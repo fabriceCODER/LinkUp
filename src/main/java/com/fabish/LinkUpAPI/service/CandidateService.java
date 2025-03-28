@@ -8,6 +8,7 @@ import com.fabish.LinkUpAPI.exception.ResourceNotFoundException;
 import com.fabish.LinkUpAPI.repository.JobApplicationRepository;
 import com.fabish.LinkUpAPI.repository.JobRepository;
 import com.fabish.LinkUpAPI.repository.UserRepository;
+import com.fabish.LinkUpAPI.security.SortUtil; // Adjusted to match your package
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -45,14 +46,14 @@ public class CandidateService {
 
     public ResumeResponseDTO uploadResume(Long candidateId, MultipartFile resume) {
         User candidate = findUser(candidateId);
-        String resumeUrl = saveResumeFile(resume); // Implement file storage logic
+        String resumeUrl = saveResumeFile(resume);
         candidate.setResumeUrl(resumeUrl);
         userRepository.save(candidate);
         return new ResumeResponseDTO(resumeUrl);
     }
 
     public Page<JobDTO> getAvailableJobs(int page, int size, String sort) {
-        Pageable pageable = PageRequest.of(page, size, Sort.parse(sort));
+        Pageable pageable = PageRequest.of(page, size, SortUtil.parseSort(sort));
         return jobRepository.findByActiveTrue(pageable).map(this::mapToJobDTO);
     }
 

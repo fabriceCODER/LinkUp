@@ -5,14 +5,18 @@ import com.fabish.LinkUpAPI.dto.JobDTO;
 import com.fabish.LinkUpAPI.dto.PlatformAnalyticsDTO;
 import com.fabish.LinkUpAPI.dto.UserDTO;
 import com.fabish.LinkUpAPI.entity.Job;
+import com.fabish.LinkUpAPI.entity.Role;
 import com.fabish.LinkUpAPI.entity.User;
+import com.fabish.LinkUpAPI.exception.ResourceNotFoundException;
 import com.fabish.LinkUpAPI.repository.JobApplicationRepository;
 import com.fabish.LinkUpAPI.repository.JobRepository;
 import com.fabish.LinkUpAPI.repository.UserRepository;
+import com.fabish.LinkUpAPI.security.SortUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort; // Added import for Sort
 import org.springframework.stereotype.Service;
 
 @Service
@@ -39,7 +43,7 @@ public class AdminService {
     }
 
     public Page<JobDTO> getAllJobs(int page, int size, String sort) {
-        Pageable pageable = PageRequest.of(page, size, Sort.parse(sort));
+        Pageable pageable = PageRequest.of(page, size, SortUtil.parseSort(sort));
         return jobRepository.findAll(pageable).map(this::mapToJobDTO);
     }
 
