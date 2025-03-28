@@ -1,8 +1,12 @@
 package com.fabish.LinkUpAPI.config;
 
+import com.fabish.LinkUpAPI.security.JwtAuthenticationFilter;
+import com.fabish.LinkUpAPI.security.JwtAuthorizationFilter;
+import com.fabish.LinkUpAPI.security.JwtUtil;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
+import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
 import org.springframework.security.core.userdetails.UserDetailsService;
@@ -27,7 +31,12 @@ public class SecurityConfig {
     }
 
     @Bean
-    public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
+    public AuthenticationManager authenticationManager(AuthenticationConfiguration authenticationConfiguration) throws Exception {
+        return authenticationConfiguration.getAuthenticationManager();
+    }
+
+    @Bean
+    public SecurityFilterChain securityFilterChain(HttpSecurity http, AuthenticationManager authenticationManager) throws Exception {
         http
                 .csrf(AbstractHttpConfigurer::disable)
                 .authorizeHttpRequests(auth -> auth
@@ -40,14 +49,9 @@ public class SecurityConfig {
                 .oauth2Login(oauth2 -> oauth2
                         .defaultSuccessUrl("/api/auth/oauth2/success", true)
                 )
-                .addFilter(new JwtAuthenticationFilter(authenticationManager(http.getSharedObject(AuthenticationManagerBuilder.class)), jwtUtil))
-                .addFilter(new JwtAuthorizationFilter(authenticationManager(http.getSharedObject(AuthenticationManagerBuilder.class)), jwtUtil, userDetailsService));
+                .addFilter(new JwtAuthenticationFilter(authenticationManager, jwtUtil))
+                .addFilter(new JwtAuthorizationFilter(authenticationManager, jwtUtil, userDetailsService));
 
         return http.build();
-    }
-
-    @Bean
-    public void configureGlobal(AuthenticationManagerBuilder auth) throws Exception {
-        auth.userDetailsService(userDetailsService).passwordEncoder(passwordEncoder());
     }
 }
