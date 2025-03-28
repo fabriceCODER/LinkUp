@@ -1,10 +1,20 @@
 package com.fabish.LinkUpAPI.service;
 
+import com.fabish.LinkUpAPI.dto.AuthResponseDTO;
+import com.fabish.LinkUpAPI.dto.LoginDTO;
+import com.fabish.LinkUpAPI.dto.UserDTO;
+import com.fabish.LinkUpAPI.entity.Role;
 import com.fabish.LinkUpAPI.entity.User;
+import com.fabish.LinkUpAPI.exception.UnauthorizedException;
 import com.fabish.LinkUpAPI.repository.UserRepository;
+import com.fabish.LinkUpAPI.security.JwtUtil;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+
+import java.util.Collections;
 
 @Service
 public class AuthService {

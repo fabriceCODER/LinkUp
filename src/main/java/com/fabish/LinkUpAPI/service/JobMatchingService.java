@@ -1,7 +1,10 @@
 package com.fabish.LinkUpAPI.service;
 
+import com.fabish.LinkUpAPI.dto.RecommendationDTO;
 import com.fabish.LinkUpAPI.entity.Job;
+import com.fabish.LinkUpAPI.entity.Role;
 import com.fabish.LinkUpAPI.entity.User;
+import com.fabish.LinkUpAPI.exception.ResourceNotFoundException;
 import com.fabish.LinkUpAPI.repository.JobRepository;
 import com.fabish.LinkUpAPI.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;

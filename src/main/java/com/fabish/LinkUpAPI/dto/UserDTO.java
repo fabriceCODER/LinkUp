@@ -10,7 +10,7 @@ import lombok.NoArgsConstructor;
 public class UserDTO {
     private Long id;
     private String email;
-    private String password; // Only used during registration
+    private String password;
     private String name;
     private String role;
 }

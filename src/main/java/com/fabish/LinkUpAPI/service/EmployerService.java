@@ -1,18 +1,30 @@
 package com.fabish.LinkUpAPI.service;
 
+import com.fabish.LinkUpAPI.dto.EmployerAnalyticsDTO;
+import com.fabish.LinkUpAPI.dto.InterviewDTO;
+import com.fabish.LinkUpAPI.dto.InterviewRequestDTO;
+import com.fabish.LinkUpAPI.dto.JobApplicationDTO;
+import com.fabish.LinkUpAPI.dto.JobDTO;
+import com.fabish.LinkUpAPI.dto.RecommendationDTO;
 import com.fabish.LinkUpAPI.entity.Interview;
 import com.fabish.LinkUpAPI.entity.Job;
 import com.fabish.LinkUpAPI.entity.JobApplication;
 import com.fabish.LinkUpAPI.entity.User;
+import com.fabish.LinkUpAPI.exception.ResourceNotFoundException;
+import com.fabish.LinkUpAPI.exception.UnauthorizedException;
 import com.fabish.LinkUpAPI.repository.InterviewRepository;
 import com.fabish.LinkUpAPI.repository.JobApplicationRepository;
 import com.fabish.LinkUpAPI.repository.JobRepository;
 import com.fabish.LinkUpAPI.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDateTime;
+import java.util.List;
 import java.util.stream.Collectors;
 
 @Service
@@ -41,7 +53,7 @@ public class EmployerService {
     }
 
     public Page<JobDTO> getEmployerJobs(Long employerId, int page, int size, String sort) {
-        Pageable pageable = PageRequest.of(page, size, Sort.parse(sort));
+        Pageable pageable = PageRequest.of(page, size, parseSort(sort));
         return jobRepository.findByEmployerId(employerId, pageable).map(this::mapToJobDTO);
     }
 
@@ -113,5 +125,23 @@ public class EmployerService {
 
     private JobApplicationDTO mapToApplicationDTO(JobApplication application) {
         return new JobApplicationDTO(application.getId(), application.getJob().getId(), application.getCandidate().getId(), application.getResumeUrl(), application.getStatus(), application.getAppliedDate());
+    }
+
+    // Custom method to parse sort string
+    private Sort parseSort(String sort) {
+        if (sort == null || sort.trim().isEmpty()) {
+            return Sort.unsorted(); // Default to unsorted if no sort provided
+        }
+
+        String[] parts = sort.split(",");
+        if (parts.length != 2) {
+            throw new IllegalArgumentException("Sort parameter must be in format 'field,direction' (e.g., 'postedDate,desc')");
+        }
+
+        String field = parts[0].trim();
+        String direction = parts[1].trim().toLowerCase();
+
+        Sort.Direction sortDirection = direction.equals("desc") ? Sort.Direction.DESC : Sort.Direction.ASC;
+        return Sort.by(sortDirection, field);
     }
 }

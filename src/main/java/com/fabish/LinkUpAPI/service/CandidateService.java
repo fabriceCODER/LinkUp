@@ -1,12 +1,23 @@
 package com.fabish.LinkUpAPI.service;
 
+import com.fabish.LinkUpAPI.dto.*;
+import com.fabish.LinkUpAPI.entity.Job;
+import com.fabish.LinkUpAPI.entity.JobApplication;
 import com.fabish.LinkUpAPI.entity.User;
+import com.fabish.LinkUpAPI.exception.ResourceNotFoundException;
 import com.fabish.LinkUpAPI.repository.JobApplicationRepository;
 import com.fabish.LinkUpAPI.repository.JobRepository;
 import com.fabish.LinkUpAPI.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
+
+import java.time.LocalDateTime;
+import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 public class CandidateService {
