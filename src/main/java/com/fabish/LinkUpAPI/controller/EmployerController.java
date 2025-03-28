@@ -1,8 +1,17 @@
 package com.fabish.LinkUpAPI.controller;
 
+import com.fabish.LinkUpAPI.dto.*;
+import com.fabish.LinkUpAPI.entity.User;
+import com.fabish.LinkUpAPI.service.EmployerService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 @RestController
 @RequestMapping("/api/employer")
