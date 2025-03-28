@@ -1,8 +1,14 @@
-package com.fabish.LinkUpAPI.security;
+package com.fabish.LinkUpAPI.security; // Adjust package as needed
 
-import org.springframework.security.authentication.AuthenticationManager;
+
+import jakarta.servlet.FilterChain;
+import jakarta.servlet.ServletException;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
+import org.jetbrains.annotations.NotNull;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
@@ -13,18 +19,16 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 public class JwtAuthorizationFilter extends OncePerRequestFilter {
-    private final AuthenticationManager authenticationManager;
     private final JwtUtil jwtUtil;
     private final UserDetailsService userDetailsService;
 
-    public JwtAuthorizationFilter(AuthenticationManager authenticationManager, JwtUtil jwtUtil, UserDetailsService userDetailsService) {
-        this.authenticationManager = authenticationManager;
+    public JwtAuthorizationFilter(JwtUtil jwtUtil, UserDetailsService userDetailsService) {
         this.jwtUtil = jwtUtil;
         this.userDetailsService = userDetailsService;
     }
 
     @Override
-    protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain chain)
+    protected void doFilterInternal(HttpServletRequest request, @NotNull HttpServletResponse response, @NotNull FilterChain chain)
             throws ServletException, IOException {
         String header = request.getHeader("Authorization");
         if (header == null || !header.startsWith("Bearer ")) {
@@ -36,8 +40,8 @@ public class JwtAuthorizationFilter extends OncePerRequestFilter {
         if (jwtUtil.validateToken(token)) {
             String username = jwtUtil.getUsernameFromToken(token);
             UserDetails userDetails = userDetailsService.loadUserByUsername(username);
-            List<String> roles = jwtUtil.getRolesFromToken(token);
-            List<GrantedAuthority> authorities = roles.stream()
+            List<String> roleStrings = jwtUtil.getRolesFromToken(token);
+            List<GrantedAuthority> authorities = roleStrings.stream()
                     .map(SimpleGrantedAuthority::new)
                     .collect(Collectors.toList());
             UsernamePasswordAuthenticationToken auth = new UsernamePasswordAuthenticationToken(
