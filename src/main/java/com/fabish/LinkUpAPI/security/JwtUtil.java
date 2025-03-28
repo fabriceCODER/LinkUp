@@ -12,10 +12,10 @@ import java.util.stream.Collectors;
 
 @Component
 public class JwtUtil {
-    @Value("${jwt.secret}")
+    @Value("${JWT_SECRET}")
     private String secret;
 
-    @Value("${jwt.expiration}")
+    @Value("${JWT_EXPIRATION}")
     private long expirationTime;
 
     public String generateToken(UserDetails userDetails) {
