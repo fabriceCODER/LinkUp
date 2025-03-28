@@ -1,12 +1,16 @@
-package com.fabish.LinkUpAPI.security;
+package com.fabish.LinkUpAPI.security; // Adjust package as needed
 
-import lombok.Value;
+import io.jsonwebtoken.Claims;
+import io.jsonwebtoken.Jwts;
+import io.jsonwebtoken.SignatureAlgorithm;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Component;
 
 import java.util.Date;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
@@ -15,7 +19,7 @@ public class JwtUtil {
     @Value("${JWT_SECRET}")
     private String secret;
 
-    @Value("${JWT_EXPIRATION}")
+    @Value("${JWT_EXPIRATION:86400000}") // Default to 24 hours if not set
     private long expirationTime;
 
     public String generateToken(UserDetails userDetails) {
