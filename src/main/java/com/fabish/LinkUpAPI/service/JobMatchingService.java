@@ -1,7 +1,6 @@
 package com.fabish.LinkUpAPI.service;
 
 import com.fabish.LinkUpAPI.entity.Job;
-import com.fabish.LinkUpAPI.entity.Role;
 import com.fabish.LinkUpAPI.entity.User;
 import com.fabish.LinkUpAPI.repository.JobRepository;
 import com.fabish.LinkUpAPI.repository.UserRepository;

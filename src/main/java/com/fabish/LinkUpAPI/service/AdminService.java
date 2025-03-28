@@ -5,7 +5,6 @@ import com.fabish.LinkUpAPI.dto.JobDTO;
 import com.fabish.LinkUpAPI.dto.PlatformAnalyticsDTO;
 import com.fabish.LinkUpAPI.dto.UserDTO;
 import com.fabish.LinkUpAPI.entity.Job;
-import com.fabish.LinkUpAPI.entity.Role;
 import com.fabish.LinkUpAPI.entity.User;
 import com.fabish.LinkUpAPI.repository.JobApplicationRepository;
 import com.fabish.LinkUpAPI.repository.JobRepository;
