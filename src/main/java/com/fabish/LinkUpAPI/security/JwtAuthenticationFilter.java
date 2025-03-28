@@ -33,7 +33,7 @@ public class JwtAuthenticationFilter extends UsernamePasswordAuthenticationFilte
                     loginDTO.getEmail(), loginDTO.getPassword());
             return authenticationManager.authenticate(authToken);
         } catch (IOException e) {
-            throw new RuntimeException(e);
+            throw new RuntimeException("Failed to parse login request", e);
         }
     }
 
@@ -42,8 +42,7 @@ public class JwtAuthenticationFilter extends UsernamePasswordAuthenticationFilte
                                             FilterChain chain, Authentication authResult) throws IOException {
         UserDetails userDetails = (UserDetails) authResult.getPrincipal();
         String token = jwtUtil.generateToken(userDetails);
-        AuthResponseDTO responseDTO = new AuthResponseDTO(token, null, authResult.getAuthorities().iterator().next().getAuthority().substring(5));
         response.setContentType("application/json");
-        response.getWriter().write(new ObjectMapper().writeValueAsString(responseDTO));
+        response.getWriter().write(new ObjectMapper().writeValueAsString(new AuthResponseDTO(token, null, null)));
     }
 }
